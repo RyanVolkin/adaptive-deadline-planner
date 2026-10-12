@@ -1,3 +1,8 @@
+**Running**
+This application builds of main and runs at
+
+https://adaptive-deadline-planner.onrender.com
+
 **Setup**
 
 Use
