@@ -1,3 +1,11 @@
 <!doctype html>
-<title>My App</title>
-<h1>Hello, Flask!</h1>
+<title>Adaptive Deadline Planner</title>
+<h1>Adaptive Deadline Planner</h1>
+{% if user_id %}
+<p>Logged in user ID: <code>{{ user_id }}</code></p>
+{% else %}
+<p>You are not logged in.</p>
+<form action="{{ url_for('auth.login') }}" method="get">
+	<button type="submit">Log in</button>
+</form>
+{% endif %}
