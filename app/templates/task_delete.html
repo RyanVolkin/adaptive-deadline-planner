@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Delete task</title>
+<h1>Delete task</h1>
+<p>Delete <strong>{{ task.name }}</strong>?</p>
+<p>This will also delete its work records and schedule entries. This cannot be undone.</p>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+  <button type="submit" name="confirmed" value="yes">Delete task</button>
+  <a href="{{ url_for('tasks.list_tasks') }}">Cancel</a>
+</form>
+</html>

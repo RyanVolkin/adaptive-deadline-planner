@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ 'Edit' if task_id else 'Add' }} task</title>
+<h1>{{ 'Edit' if task_id else 'Add' }} task</h1>
+{% if errors %}
+<ul role="alert">
+  {% for message in errors.values() %}<li>{{ message }}</li>{% endfor %}
+</ul>
+{% endif %}
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+  <p><label>Name <input name="name" value="{{ data.get('name', '') }}" maxlength="100" required></label></p>
+  <p><label>Type <select name="type">
+    {% for type in task_types %}<option value="{{ type }}" {{ 'selected' if data.get('type') == type else '' }}>{{ type | capitalize }}</option>{% endfor %}
+  </select></label></p>
+  <p><label>Priority <select name="priority">
+    {% for priority in priorities %}<option value="{{ priority }}" {{ 'selected' if data.get('priority') == priority else '' }}>{{ priority | capitalize }}</option>{% endfor %}
+  </select></label></p>
+  <p><label>Deadline <input type="date" name="deadline" value="{{ data.get('deadline', '') }}" min="{{ today }}" required></label></p>
+  <p><label>Original estimate (minutes) <input type="number" name="original_estimate" value="{{ data.get('original_estimate', '') }}" min="1" step="1" required></label></p>
+  <button type="submit">Save task</button>
+  <a href="{{ url_for('tasks.list_tasks') }}">Cancel</a>
+</form>
+</html>

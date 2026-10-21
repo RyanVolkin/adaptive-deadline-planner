@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, session
 
 from app.routes.auth import auth_bp
+from app.routes.tasks import tasks_bp
+from app.db import close_db
 
 
 def create_app(test_config=None):
@@ -13,6 +15,8 @@ def create_app(test_config=None):
         SECRET_KEY=os.environ.get("SECRET_KEY"),
         SUPABASE_URL=os.environ.get("SUPABASE_URL"),
         SUPABASE_KEY=os.environ.get("SUPABASE_KEY"),
+        DATABASE_URL=os.environ.get("DATABASE_URL"),
+        APP_TIMEZONE=os.environ.get("APP_TIMEZONE", "America/New_York"),
     )
     if test_config:
         app.config.update(test_config)
@@ -27,6 +31,8 @@ def create_app(test_config=None):
         )
 
     app.register_blueprint(auth_bp)
+    app.register_blueprint(tasks_bp)
+    app.teardown_appcontext(close_db)
 
     @app.route("/")
     def index():
