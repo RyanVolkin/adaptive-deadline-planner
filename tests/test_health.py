@@ -1,9 +1,10 @@
 import pytest
 from app import create_app
+from tests.fake_auth import FakeAuthClient
 
 @pytest.fixture
 def client():
-    app = create_app()
+    app = create_app({"SUPABASE_CLIENT": FakeAuthClient()})
     app.config.update({
         "TESTING": True
     })
