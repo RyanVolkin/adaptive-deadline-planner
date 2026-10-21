@@ -3,6 +3,9 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, jsonify, render_template, session
 
+from app.routes.auth import auth_bp
+
+
 def create_app(test_config=None):
     load_dotenv()
     app = Flask(__name__)
@@ -23,9 +26,11 @@ def create_app(test_config=None):
             app.config["SUPABASE_URL"], app.config["SUPABASE_KEY"]
         )
 
+    app.register_blueprint(auth_bp)
+
     @app.route("/")
     def index():
-        return render_template("index.html")
+        return render_template("index.html", user_id=session.get("user_id"))
 
     @app.route("/health")
     def health_check():
