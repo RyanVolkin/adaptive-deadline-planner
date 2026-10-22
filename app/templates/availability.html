@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>My availability</title>
+<h1>My availability</h1>
+<p><a href="{{ url_for('index') }}">Home</a> | <a href="{{ url_for('tasks.list_tasks') }}">My tasks</a></p>
+{% for message in get_flashed_messages() %}<p role="status">{{ message }}</p>{% endfor %}
+{% if errors %}
+<ul role="alert">
+  {% for message in errors.values() %}<li>{{ message }}</li>{% endfor %}
+</ul>
+{% endif %}
+
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+  {% for day in weekdays %}
+  {% set key = 'minutes_' ~ loop.index0 %}
+  <p><label>{{ day }} (minutes) <input type="number" name="{{ key }}" value="{{ data.get(key, 0) }}" min="0" max="1440" step="1" required></label></p>
+  {% endfor %}
+  <button type="submit">Save availability</button>
+</form>
+</html>

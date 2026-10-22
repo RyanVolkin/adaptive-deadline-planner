@@ -5,6 +5,7 @@ from flask import Flask, jsonify, render_template, session
 
 from app.routes.auth import auth_bp
 from app.routes.tasks import tasks_bp
+from app.routes.availability import availability_bp
 from app.db import close_db
 
 
@@ -32,6 +33,7 @@ def create_app(test_config=None):
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(tasks_bp)
+    app.register_blueprint(availability_bp)
     app.teardown_appcontext(close_db)
 
     @app.route("/")
