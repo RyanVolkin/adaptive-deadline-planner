@@ -3,6 +3,7 @@
 <h1>Adaptive Deadline Planner</h1>
 {% if user_id %}
 <p>Logged in user ID: <code>{{ user_id }}</code></p>
+<p><a href="{{ url_for('tasks.list_tasks') }}">My tasks</a></p>
 {% else %}
 <p>You are not logged in.</p>
 <form action="{{ url_for('auth.login') }}" method="get">
