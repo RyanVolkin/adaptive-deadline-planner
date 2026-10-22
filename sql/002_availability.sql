@@ -8,6 +8,6 @@ CREATE TABLE public.availability (
 );
 
 ALTER TABLE public.availability ENABLE ROW LEVEL SECURITY;
-REVOKE ALL ON TABLE public avaialability FROM PUBLIC, anon, authenticated;
+REVOKE ALL ON TABLE public availability FROM PUBLIC, anon, authenticated;
 
 COMMIT;
