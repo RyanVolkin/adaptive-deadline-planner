@@ -32,3 +32,19 @@ To manually run the tests in the test folder use
   python -m pytest
 
 Tests will automatically run after you create a PR
+
+**Coverage**
+
+GitHub Actions runs pytest with coverage for the Python code in `app`. Download
+`coverage-report` from a successful run, extract it, and open `index.html`.
+
+To run it locally:
+
+```sh
+python -m coverage run -m pytest
+python -m coverage report -m
+python -m coverage html
+```
+
+Open `htmlcov/index.html` for the full report. Database tests are skipped locally
+unless `TEST_DATABASE_URL` points to a separate PostgreSQL test server.

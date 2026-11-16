@@ -38,6 +38,17 @@ jobs:
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
-    - name: Run tests with pytest
+    - name: Run tests with coverage
+      run: python -m coverage run -m pytest
+
+    - name: Generate coverage report
       run: |
-        python -m pytest
+        python -m coverage report -m
+        python -m coverage html
+
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v4
+      with:
+        name: coverage-report
+        path: htmlcov/
+        if-no-files-found: error
