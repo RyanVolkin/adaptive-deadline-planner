@@ -1,12 +1,9 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ "Create account" if mode == "register" else "Log in" }} | Adaptive Deadline Planner</title>
-</head>
-<body>
-  <main>
+{% extends "base.html" %}
+
+{% block title %}{{ "Create account" if mode == "register" else "Log in" }} | Adaptive Deadline Planner{% endblock %}
+
+{% block content %}
+<section class="form-card">
     <h1>{{ "Create your account" if mode == "register" else "Welcome back" }}</h1>
     {% if error %}<div class="error" role="alert">{{ error }}</div>{% endif %}
     <form method="post">
@@ -19,6 +16,5 @@
     <p>{{ "Already have an account?" if mode == "register" else "Need an account?" }}
       <a href="{{ url_for('auth.login' if mode == 'register' else 'auth.register') }}">{{ "Log in" if mode == "register" else "Register" }}</a>
     </p>
-  </main>
-</body>
-</html>
+</section>
+{% endblock %}
