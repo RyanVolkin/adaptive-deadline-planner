@@ -67,7 +67,7 @@ def test_create_edit_and_delete_task(client, db_connection, user_id):
     }, follow_redirects=True)
     assert response.status_code == 200
     assert tasks.list_by_user(user_id) == []
-    assert b"No tasks yet." in response.data
+    assert b"No tasks yet" in response.data
     assert b"Task deleted." in response.data
 
 
