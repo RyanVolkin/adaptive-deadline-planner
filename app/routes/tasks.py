@@ -61,6 +61,7 @@ def list_tasks():
     )
 
 
+
 @tasks_bp.route("/new", methods=["GET", "POST"])
 def create_task():
     if request.method == "POST":

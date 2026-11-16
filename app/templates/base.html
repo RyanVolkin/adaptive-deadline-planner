@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Adaptive Deadline Planner{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header class="top-bar">
+    <a href="{{ url_for('index') }}">Adaptive Deadline Planner</a>
+    <nav aria-label="Main navigation">
+      {% if session.get('user_id') %}
+      <a href="{{ url_for('index') }}">Daily Plan</a>
+      <a href="{{ url_for('tasks.list_tasks') }}">Tasks</a>
+      <a href="{{ url_for('availability.edit_availability') }}">Availability</a>
+      <a href="{{ url_for('tasks.list_tasks') }}">Log Work</a>
+      <form action="{{ url_for('auth.logout') }}" method="post">
+        <button type="submit">Log out</button>
+      </form>
+      {% else %}
+      <a href="{{ url_for('auth.login') }}">Log in</a>
+      <a href="{{ url_for('auth.register') }}">Register</a>
+      {% endif %}
+    </nav>
+  </header>
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>
+<style>
+  
+.top-bar {
+  align-items: center;
+  background: var(--color-brand);
+  color: var(--color-surface);
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+}
+
+.top-bar a {
+  color: var(--color-surface);
+  text-decoration: none;
+}
+
+.top-bar nav {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+}
+
+.top-bar form {
+  margin: 0;
+}
+
+.top-bar button {
+  background: transparent;
+  border: 0;
+  color: var(--color-surface);
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+</style>

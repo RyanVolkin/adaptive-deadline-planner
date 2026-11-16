@@ -1,8 +1,11 @@
-<!doctype html>
-<html lang="en">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Task could not be changed</title>
+{% extends "base.html" %}
+
+{% block title %}Task could not be changed{% endblock %}
+
+{% block content %}
+<section class="form-card">
 <h1>Task could not be changed</h1>
-{% for message in errors.values() %}<p role="alert">{{ message }}</p>{% endfor %}
+{% for message in errors.values() %}<p class="error" role="alert">{{ message }}</p>{% endfor %}
 <p><a href="{{ url_for('tasks.list_tasks') }}">Back to tasks</a></p>
-</html>
+</section>
+{% endblock %}

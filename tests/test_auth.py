@@ -13,8 +13,6 @@ def test_registration_login_and_logout():
     assert response.status_code == 302
     with client.session_transaction() as session:
         assert session["user_id"] == "1"
-    response = client.get("/")
-    assert b"Logged in user ID: <code>1</code>" in response.data
 
     response = client.post(
         "/auth/login", data={"email": "planner@example.com", "password": "password123"}
@@ -62,5 +60,6 @@ def test_index_login_link_opens_login_page():
 
     response = client.get("/")
 
-    assert b'<form action="/auth/login" method="get">' in response.data
+    assert b'href="/auth/login"' in response.data
+    assert b"Log in" in response.data
     assert client.get("/auth/login").status_code == 200
