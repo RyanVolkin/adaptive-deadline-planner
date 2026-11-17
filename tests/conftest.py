@@ -32,6 +32,9 @@ def db_url():
                 connection.execute("CREATE TABLE auth.users (id uuid PRIMARY KEY)")
                 migration = Path(__file__).resolve().parents[1] / "sql/001_tasks.sql"
                 connection.execute(migration.read_text())
+                
+                migration = Path(__file__).resolve().parents[1] / "sql/002_availability.sql"
+                connection.execute(migration.read_text())
             yield url
         finally:
             admin.execute(sql.SQL("DROP DATABASE {} WITH (FORCE)").format(sql.Identifier(name)))
