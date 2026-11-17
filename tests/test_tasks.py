@@ -6,7 +6,7 @@ import pytest
 from app import create_app
 from app.repositories import TaskRepository
 from app.routes import tasks as task_routes
-from app.task import Task
+from app.domain.task import Task
 from tests.fake_auth import FakeAuthClient
 
 
