@@ -1,7 +1,7 @@
 from dataclasses import asdict
 
-from app.estimation import HISTORY_LIMIT
-from app.task import Task
+from app.domain.estimation import HISTORY_LIMIT
+from app.domain.task import Task
 
 
 TASK_COLUMNS = """id, user_id, name, type, priority, deadline,
@@ -85,45 +85,3 @@ class TaskRepository:
             "DELETE FROM public.tasks WHERE user_id = %s AND id = %s",
             (user_id, task_id),
         )
-
-
-class WorkRecordRepository:
-    def __init__(self, connection):
-        self.connection = connection
-
-    def sum_minutes(self, user_id, task_id):
-        row = self.connection.execute(
-            """SELECT COALESCE(SUM(work_records.minutes), 0) AS minutes
-               FROM public.work_records
-               JOIN public.tasks ON tasks.id = work_records.task_id
-               WHERE tasks.user_id = %s AND tasks.id = %s""",
-            (user_id, task_id),
-        ).fetchone()
-        return row["minutes"]
-
-
-class AvailabilityRepository:
-    def __init__(self, connection):
-        self.connection = connection
-
-    def get_week(self, user_id):
-        rows = self.connection.execute(
-                "SELECT weekday, minutes FROM public.availability WHERE user_id = %s ORDER BY weekday",
-                (user_id,),
-        ).fetchall()
-        week = [0] * 7
-        for row in rows:
-            week[row["weekday"]] = row["minutes"]
-        return week
-
-    def save_week(self, user_id, minutes_by_day):
-        for weekday, minutes in enumerate(minutes_by_day):
-            self.connection.execute(
-                    """INSERT INTO public.availability (user_id, weekday, minutes
-                    ) VALUES (%s, %s, %s
-                    ) ON CONFLICT (user_id, weekday) DO UPDATE SET minutes = EXCLUDED.minutes
-                    """,
-                    (user_id, weekday, minutes)
-            )
-
-

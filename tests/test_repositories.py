@@ -4,10 +4,10 @@ import psycopg
 import pytest
 
 from app.db import transaction
-from app.estimation import EstimationEngine
+from app.domain.estimation import EstimationEngine
 from app.repositories import TaskRepository, WorkRecordRepository
-from app.task import Task
-from app.task_service import TaskService
+from app.domain.task import Task
+from app.services.task_service import TaskService
 
 
 NOW = datetime(2026, 10, 21, 12, tzinfo=timezone.utc)

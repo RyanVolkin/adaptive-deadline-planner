@@ -5,10 +5,10 @@ from zoneinfo import ZoneInfo
 from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, session, url_for
 
 from app.db import get_db, transaction
-from app.estimation import EstimationEngine
+from app.domain.estimation import EstimationEngine
 from app.repositories import TaskRepository, WorkRecordRepository
-from app.task import PRIORITIES, TASK_TYPES
-from app.task_service import TaskNotFound, TaskService
+from app.domain.task import PRIORITIES, TASK_TYPES
+from app.services.task_service import TaskNotFound, TaskService
 
 
 tasks_bp = Blueprint("tasks", __name__, url_prefix="/tasks")

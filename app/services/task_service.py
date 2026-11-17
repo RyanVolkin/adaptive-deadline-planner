@@ -1,7 +1,7 @@
 from datetime import date, datetime
 
-from app.estimation import HISTORY_LIMIT
-from app.task import MAX_ORIGINAL_ESTIMATE, PRIORITIES, TASK_TYPES, Task
+from app.domain.estimation import HISTORY_LIMIT
+from app.domain.task import MAX_ORIGINAL_ESTIMATE, PRIORITIES, TASK_TYPES, Task
 
 
 class TaskNotFound(ValueError):

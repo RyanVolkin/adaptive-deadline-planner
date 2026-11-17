@@ -4,9 +4,9 @@ from unittest.mock import Mock
 
 import pytest
 
-from app.estimation import EstimationEngine
-from app.task import MAX_ORIGINAL_ESTIMATE, Task, TaskState
-from app.task_service import TaskService
+from app.domain.estimation import EstimationEngine
+from app.domain.task import MAX_ORIGINAL_ESTIMATE, Task, TaskState
+from app.services.task_service import TaskService
 
 
 NOW = datetime(2026, 10, 20, 12)

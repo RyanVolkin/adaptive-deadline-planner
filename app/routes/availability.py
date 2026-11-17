@@ -1,9 +1,9 @@
 import secrets
 from flask import Blueprint, abort, flash, redirect, render_template, request, session, url_for
 from app.db import get_db, transaction
-from app.availability import WEEKDAYS
+from app.domain.availability import WEEKDAYS
 from app.repositories import AvailabilityRepository
-from app.availability_service import AvailabilityService
+from app.services.availability_service import AvailabilityService
 
 
 availability_bp = Blueprint("availability", __name__, url_prefix="/availability")

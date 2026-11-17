@@ -1,6 +1,6 @@
 import pytest
 
-from app.estimation import EstimationEngine
+from app.domain.estimation import EstimationEngine
 
 
 @pytest.fixture

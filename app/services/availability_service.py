@@ -1,4 +1,4 @@
-from app.availability import WEEKDAYS, MAX_MINUTES_PER_DAY
+from app.domain.availability import WEEKDAYS, MAX_MINUTES_PER_DAY
 
 
 class AvailabilityService:
