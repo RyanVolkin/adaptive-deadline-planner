@@ -35,6 +35,15 @@ class TaskRepository:
         ).fetchall()
         return [_to_task(row) for row in rows]
 
+    def list_incomplete(self, user_id):
+        rows = self.connection.execute(
+            f"""SELECT {TASK_COLUMNS} FROM public.tasks
+                WHERE user_id = %s AND completed_at IS NULL
+                ORDER BY deadline, id""",
+            (user_id,),
+        ).fetchall()
+        return [_to_task(row) for row in rows]
+
     def recent_ratios(self, user_id, task_type, limit=HISTORY_LIMIT):
         rows = self.connection.execute(
             """SELECT estimate_ratio FROM public.tasks

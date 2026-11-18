@@ -32,3 +32,6 @@ class AvailabilityService:
 
     def get_week(self, user_id):
         return self.availability.get_week(user_id)
+
+    def has_availability(self, user_id):
+        return self.availability.has_week(user_id)

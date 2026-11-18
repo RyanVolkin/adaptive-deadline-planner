@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}{{ view | capitalize }} plan{% endblock %}
+
+{% block content %}
+<section class="schedule-page">
+  <header class="tasks-header">
+    <div>
+      <h1>{{ view | capitalize }} plan</h1>
+      {% if view == "weekly" %}
+        <p>{{ week_start.strftime("%b") }} {{ week_start.day }} – {{ week_end.strftime("%b") }} {{ week_end.day }}, {{ week_start.year }}</p>
+      {% else %}
+        <p>{{ selected_date.strftime("%A, %B") }} {{ selected_date.day }}, {{ selected_date.year }}</p>
+      {% endif %}
+    </div>
+    <nav class="schedule-views" aria-label="Schedule views">
+      <a class="{{ 'active' if view == 'daily' else '' }}"
+         href="{{ url_for('index', view='daily', date=selected_date.isoformat()) }}">Daily</a>
+      <a class="{{ 'active' if view == 'weekly' else '' }}"
+         href="{{ url_for('index', view='weekly', date=week_start.isoformat()) }}">Weekly</a>
+    </nav>
+  </header>
+  <nav class="schedule-navigation" aria-label="{{ view | capitalize }} plan navigation">
+    <a href="{{ url_for('index', view=view, date=previous_date.isoformat()) }}"
+       aria-label="Previous {{ view | capitalize }}">&#8592; Previous</a>
+    <a href="{{ url_for('index', view=view, date=today.isoformat()) }}">Today</a>
+    <a href="{{ url_for('index', view=view, date=next_date.isoformat()) }}"
+       aria-label="Next {{ view | capitalize }}">Next &#8594;</a>
+  </nav>
+
+  {% if availability_needed %}
+    <div class="form-errors" role="alert">
+      <p>Set your weekly availability before building a daily plan.</p>
+      <a href="{{ url_for('availability.edit_availability') }}">Set availability</a>
+    </div>
+  {% endif %}
+
+  {% if alerts %}
+    <div class="form-errors" role="alert">
+      <strong>Needs attention</strong>
+      <ul>
+        {% for alert in alerts %}
+          <li>{{ alert.message }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  {% if view == "weekly" %}
+    <div class="weekly-plan">
+      {% for day, day_plan in weekly_plan %}
+        <section class="day-card">
+          <h2>{{ day.strftime("%A") }} <span>{{ day.strftime("%b") }} {{ day.day }}</span></h2>
+          {% if day_plan %}
+            <ul>
+              {% for task, minutes in day_plan %}
+                <li><strong>{{ task.name }}</strong><span>{{ minutes | hours_minutes }}</span></li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="day-empty">No work scheduled</p>
+          {% endif %}
+        </section>
+      {% endfor %}
+    </div>
+  {% elif plan %}
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Task</th>
+            <th>Priority</th>
+            <th>Deadline</th>
+            <th>Planned work</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for task, minutes in plan %}
+            <tr>
+              <td>{{ task.name }}</td>
+              <td>{{ task.priority | capitalize }}</td>
+              <td>{{ task.deadline }}</td>
+              <td>{{ minutes | hours_minutes }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="empty-state">
+      <h2>No work scheduled on this day</h2>
+      <p>Your schedule is clear, or no tasks have been planned yet.</p>
+    </div>
+  {% endif %}
+</section>
+{% endblock %}

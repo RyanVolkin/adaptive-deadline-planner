@@ -2,19 +2,33 @@ import secrets
 from flask import Blueprint, abort, flash, redirect, render_template, request, session, url_for
 from app.db import get_db, transaction
 from app.domain.availability import WEEKDAYS
-from app.repositories import AvailabilityRepository
+from app.domain.scheduling import Scheduler
+from app.repositories import (
+    AvailabilityRepository,
+    ScheduleRepository,
+    TaskRepository,
+)
 from app.services.availability_service import AvailabilityService
+from app.services.schedule_service import ScheduleService
 
 
 availability_bp = Blueprint("availability", __name__, url_prefix="/availability")
 
 def _availability_service():
     connection = get_db()
-    return AvailabilityService(
-            AvailabilityRepository(connection),
-            None,
-            lambda: transaction(connection, session["user_id"])
+    transaction_for_user = lambda: transaction(connection, session["user_id"])
+    availability_service = AvailabilityService(
+        AvailabilityRepository(connection),
+        None,
+        transaction_for_user,
     )
+    availability_service.schedules = ScheduleService(
+        TaskRepository(connection),
+        availability_service,
+        ScheduleRepository(connection),
+        Scheduler(),
+    )
+    return availability_service
 @availability_bp.before_request    
 def require_login_and_check_form():
     if "user_id" not in session:
