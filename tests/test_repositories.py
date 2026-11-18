@@ -5,7 +5,7 @@ import pytest
 
 from app.db import transaction
 from app.domain.estimation import EstimationEngine
-from app.repositories import TaskRepository, WorkRecordRepository
+from app.repositories import AvailabilityRepository, TaskRepository, WorkRecordRepository
 from app.domain.task import Task
 from app.services.task_service import TaskService
 
@@ -54,6 +54,29 @@ def test_task_reads_ignore_extra_columns(db_connection, user_id, make_task):
         assert repository.list_by_user(user_id) == [task]
     finally:
         db_connection.execute("ALTER TABLE public.tasks DROP COLUMN test_extra_column")
+
+
+def test_list_incomplete_includes_overdue_but_not_completed(
+        db_connection, user_id, make_task):
+    overdue = make_task(user_id, deadline=NOW.date() - timedelta(days=1))
+    incomplete = make_task(user_id, deadline=NOW.date() + timedelta(days=1))
+    make_task(user_id, completion_pct=100, remaining_work=0, completed_at=NOW)
+
+    assert TaskRepository(db_connection).list_incomplete(user_id) == [
+        overdue, incomplete,
+    ]
+
+
+@pytest.mark.parametrize("row_count, expected", [(0, False), (6, False), (7, True)])
+def test_has_week_requires_seven_saved_rows(
+        db_connection, user_id, row_count, expected):
+    for weekday in range(row_count):
+        db_connection.execute(
+            "INSERT INTO public.availability (user_id, weekday, minutes) "
+            "VALUES (%s, %s, %s)", (user_id, weekday, 30),
+        )
+
+    assert AvailabilityRepository(db_connection).has_week(user_id) is expected
 
 
 def test_update_and_delete_require_the_owner(db_connection, user_id, other_user_id, make_task):

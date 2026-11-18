@@ -12,6 +12,13 @@ class AvailabilityRepository:
             week[row["weekday"]] = row["minutes"]
         return week
 
+    def has_week(self, user_id):
+        row = self.connection.execute(
+            "SELECT count(*) AS count FROM public.availability WHERE user_id = %s",
+            (user_id,),
+        ).fetchone()
+        return row["count"] == 7
+
     def save_week(self, user_id, minutes_by_day):
         for weekday, minutes in enumerate(minutes_by_day):
             self.connection.execute(

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import date, datetime
 import secrets
 from zoneinfo import ZoneInfo
 
@@ -6,8 +6,16 @@ from flask import Blueprint, abort, current_app, flash, redirect, render_templat
 
 from app.db import get_db, transaction
 from app.domain.estimation import EstimationEngine
-from app.repositories import TaskRepository, WorkRecordRepository
+from app.repositories import (
+    AvailabilityRepository,
+    ScheduleRepository,
+    TaskRepository,
+    WorkRecordRepository,
+)
 from app.domain.task import PRIORITIES, TASK_TYPES
+from app.domain.scheduling import Scheduler
+from app.services.availability_service import AvailabilityService
+from app.services.schedule_service import ScheduleService
 from app.services.task_service import TaskNotFound, TaskService
 
 
@@ -26,10 +34,19 @@ def _now():
 
 def _task_service():
     connection = get_db()
+    transaction_for_user = lambda: transaction(connection, session["user_id"])
+    availability_service = AvailabilityService(
+        AvailabilityRepository(connection), None, transaction_for_user
+    )
+    schedule_service = ScheduleService(
+        TaskRepository(connection),
+        availability_service,
+        ScheduleRepository(connection),
+        Scheduler(),
+    )
     return TaskService(
         TaskRepository(connection), WorkRecordRepository(connection),
-        EstimationEngine(), None,  # ScheduleService will be connected in #6.
-        lambda: transaction(connection, session["user_id"]), clock=_now,
+        EstimationEngine(), schedule_service, transaction_for_user, clock=_now,
     )
 
 
