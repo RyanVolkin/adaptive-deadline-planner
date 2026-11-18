@@ -85,3 +85,10 @@ class TaskRepository:
             "DELETE FROM public.tasks WHERE user_id = %s AND id = %s",
             (user_id, task_id),
         )
+
+    def clear_scheduled_work(self, user_id, task_id, today):
+        self.connection.execute(
+            """DELETE FROM public.schedule_entries
+               WHERE user_id = %s AND task_id = %s AND date >= %s""",
+            (user_id, task_id, today),
+        )
